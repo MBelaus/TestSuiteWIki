@@ -21,14 +21,14 @@ public class PediaPressGeneratedPage {
 	
 	public boolean VerificarUrl(String valor) throws Exception {
 		Reporter.log("Verificamos que se redirigió a la página de " + valor);
-		Thread.sleep(10000);
+		Thread.sleep(15000);
 		return driver.getCurrentUrl().contains(valor);
 	}
 	
-	public void AddCart(String cantPags) throws Exception {
-		Reporter.log("Verificar que son " + cantPags + " páginas");
+	public void AddCart() throws Exception {
+		Reporter.log("Verificar que la cantidad de páginas no sea cero");
 		
-		Assert.assertTrue((paginas.getText().contains(cantPags)), "El número de páginas es erroneo");
+		Assert.assertNotEquals("Cantidad de paginas distinto a cero",  paginas.getText(), "0");
 
 		Reporter.log("Ubicar el botón de Add to Cart y ver si esta visible");
 		

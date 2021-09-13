@@ -49,12 +49,14 @@ public class TestCaseWiki {
 		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
 		WikiMainPage wikiMainPage = PageFactory.initElements(driver, WikiMainPage.class);
 		WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
-		
+
 		wikiHomePage.AbrirPagina();
-		
+
 		wikiMainPage.PaginasEspeciales("Páginas especiales");
 
 		wikiResultPage.CrearCuenta();
+
+		Assert.assertTrue((wikiResultPage.VerificarUrl("Bienvenida")), "No se redirigió a la pagina de Bienvenida");
 	}
 
 	// Santi
@@ -66,7 +68,7 @@ public class TestCaseWiki {
 		WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
 		wikiResultPage.IniciarSesion();
 
-		wikiResultPage.BuscarArticulo("Cloroformo");
+		wikiResultPage.BuscarArticulo("Linux");
 
 		wikiResultPage.RealizarEdicion("Cachivache");
 
@@ -139,7 +141,7 @@ public class TestCaseWiki {
 				"No se redirigió a la página de Pediapress");
 		// Actualmente los tres artículos suman un total de 379 páginas en el libro que
 		// se genera
-		pediaPressGeneratedPage.AddCart("379");
+		pediaPressGeneratedPage.AddCart();
 
 		// Considero el final de la prueba cuando se llega al carrito
 		Reporter.log("Verificamos que se redirigió a la página de carrito");
@@ -278,36 +280,36 @@ public class TestCaseWiki {
 		cambiosRecientesPage.AgregarFiltros();
 
 	}
-	
-	//Leo
-    @Test(description="Validar y verificar que este la opcion de donar y solicitar informacion")
-    public void validarOpcion() throws Exception {
 
-    WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
-    WikiMainPage wikiMainPage = PageFactory.initElements(driver, WikiMainPage.class);
-    WikiResultPage wikiresult = PageFactory.initElements(driver, WikiResultPage.class);
+	// Leo
+	@Test(description = "Validar y verificar que este la opcion de donar y solicitar informacion")
+	public void ValidarOpcion() throws Exception {
 
-    wikiHomePage.AbrirPagina();
-    wikiMainPage.VerificarUrl("Wikipedia:Portada");
-    wikiMainPage.UbicarOpcionDonaciones();
+		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
+		WikiMainPage wikiMainPage = PageFactory.initElements(driver, WikiMainPage.class);
+		WikiResultPage wikiresult = PageFactory.initElements(driver, WikiResultPage.class);
 
-    wikiresult.solicitarInfoDonacion();
-    }
-    
-    //Julio
-    @Test(description = "Validar y verificar los titulos Wikipedia Contacto y solicitudes")
-    public void ValidarContacto() throws Exception {
-        WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
-        WikiContactoPage wikiContactoPage =PageFactory.initElements(driver, WikiContactoPage.class);
+		wikiHomePage.AbrirPagina();
+		wikiMainPage.VerificarUrl("Wikipedia:Portada");
+		wikiMainPage.UbicarOpcionDonaciones();
 
-        wikiHomePage.AbrirPagina();
-        wikiHomePage.BotonContacto();
-        wikiContactoPage.titulo();
-        wikiContactoPage.Subtitulo();
-        wikiContactoPage.Subtitulo1();
-        wikiContactoPage.Solicitud();
-        wikiContactoPage.SolicitudTitulo();
+		wikiresult.solicitarInfoDonacion();
+	}
 
-    }
+	// Julio
+	@Test(description = "Validar y verificar los titulos Wikipedia Contacto y solicitudes")
+	public void ValidarContacto() throws Exception {
+		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
+		WikiContactoPage wikiContactoPage = PageFactory.initElements(driver, WikiContactoPage.class);
+
+		wikiHomePage.AbrirPagina();
+		wikiHomePage.BotonContacto();
+		wikiContactoPage.ValidarTitulo("Wikipedia:Contacto", "firstHeading");
+		wikiContactoPage.ValidarTitulo("Información importante", "Información_importante");
+		wikiContactoPage.ValidarTitulo("Dudas más frecuentes", "Dudas_más_frecuentes");
+		wikiContactoPage.Solicitud();
+		wikiContactoPage.ValidarTitulo("Wikipedia:Artículos solicitados", "firstHeading");
+
+	}
 
 }

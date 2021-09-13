@@ -71,6 +71,6 @@ public class WikiHomePage {
         Reporter.log("Buscar el boton de Contacto y validar que exista");
         Assert.assertTrue((contacto.isDisplayed()));
         Reporter.log("Hacer Click");
-        contacto.submit();
+        contacto.click();
     }
 }

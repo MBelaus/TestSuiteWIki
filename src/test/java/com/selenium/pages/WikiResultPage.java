@@ -40,7 +40,7 @@ public class WikiResultPage {
 	private WebElement busqueda;
 	@FindBy(id = "ca-ve-edit")
 	private WebElement editar;
-	@FindBy(id = "mwOw")
+	@FindBy(id = "mwCA")
 	private WebElement parrafo;
 	@FindBy(linkText = "Publicar cambios…")
 	private WebElement publicar1;
@@ -98,8 +98,8 @@ public class WikiResultPage {
 	private WebElement pResultado;
 
 	public void IniciarSesion() throws Exception {
-		String sUsuario = "SeleniumTestBot";
-		String sContra = "STB140300";
+		String sUsuario = "SeleniumWikiBot";
+		String sContra = "Selenium123";
 
 		Reporter.log("Se presiona el boton de \"Acceder\" para iniciar sesion");
 		login.click();

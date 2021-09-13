@@ -1,50 +1,33 @@
 package com.selenium.pages;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 import org.testng.Reporter;
 
 public class WikiContactoPage {
-	@FindBy(id = "firstHeading")
-	private WebElement f1;
-	@FindBy(id = "Información_importante")
-	private WebElement sub1;
-	@FindBy(id = "Dudas_más_frecuentes")
-	private WebElement sub2;
-	@FindBy(className = "mw-redirect")
+	WebDriver driver;
+
+	public WikiContactoPage(WebDriver ldriver) {
+		driver = ldriver;
+	}
+
+	@FindBy(xpath = "//a[contains(text(), 'solicitudes')]")
 	private WebElement soli;
-	@FindBy(id = "firstHeading")
-	private WebElement titulo;
 
-	public void titulo() {
+	public void ValidarTitulo(String valor, String idParam) throws Exception {
 		Reporter.log("Validar que el titulo sea el correcto");
-		String titulo = "Wikipedia:Contacto";
-		Assert.assertTrue(f1.getText().contains(titulo));
+		WebElement titulo = driver.findElement(By.id(idParam));
+		Assert.assertTrue(titulo.getText().contains(valor), valor + " no se muestra");
 	}
 
-	public void Subtitulo() {
-		Reporter.log("Validar Subtitulos");
-		String sub = "Información importante";
-		Assert.assertTrue(sub1.getText().contains(sub));
-	}
-
-	public void Subtitulo1() {
-		String Sub = "Dudas más frecuentes";
-		Assert.assertTrue(sub2.getText().contains(Sub));
-
-	}
-
-	public void Solicitud() {
+	public void Solicitud() throws Exception {
 		Reporter.log("verificar que el boton solicitudes sea visible y Ver la pagina de solucitudes");
-		Assert.assertTrue((soli.isDisplayed()));
+		Assert.assertTrue(soli.isDisplayed(), "El boton de solicitudos no se muestra");
 		Reporter.log("Hacer Click en Solicitudes");
-		soli.submit();
+		soli.click();
 	}
 
-	public void SolicitudTitulo() {
-		Reporter.log("Verificar titulo de la pagina Solicitudes");
-		String solici = "Wikipedia:Artículos solicitados";
-		Assert.assertTrue(titulo.getText().contains(solici));
-	}
 }
