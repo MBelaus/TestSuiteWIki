@@ -96,6 +96,8 @@ public class WikiResultPage {
 	private WebElement btnMostrar;
 	@FindBy(xpath = "//p[contains(text(),'No se ha encontrado ningún elemento en el registro')]")
 	private WebElement pResultado;
+	@FindBy(xpath = "//a[contains(text(), 'solicitudes')]")
+	private WebElement soli;
 
 	public void IniciarSesion() throws Exception {
 		String sUsuario = "SeleniumWikiBot";
@@ -385,6 +387,18 @@ public class WikiResultPage {
         WebElement informacion = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Otras maneras de donar")));
         informacion.click();
         Reporter.log("Verificar que la url retornada sea https://donate.wikimedia.org/wiki/Ways_to_Give/es ");
-        Assert.assertTrue (driver.getCurrentUrl().contains("donate.wikimedia.org/wiki/Ways_to_Give/es"));
     }
+	
+	public boolean ValidarTitulo(String valor, String idParam) throws Exception {
+		Reporter.log("Validar que el titulo sea el correcto");
+		WebElement titulo = driver.findElement(By.id(idParam));
+		return titulo.getText().contains(valor);
+	}
+
+	public void ValidarSolicitud() throws Exception {
+		Reporter.log("verificar que el boton solicitudes sea visible y Ver la pagina de solucitudes");
+		Assert.assertTrue(soli.isDisplayed(), "El boton de solicitudos no se muestra");
+		Reporter.log("Hacer Click en Solicitudes");
+		soli.click();
+	}
 }

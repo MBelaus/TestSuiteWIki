@@ -17,7 +17,6 @@ import com.selenium.driver.DriverFactory;
 import com.selenium.pages.CambiosRecientesPage;
 import com.selenium.pages.PediaPressGeneratedPage;
 import com.selenium.pages.WikiCommonsPage;
-import com.selenium.pages.WikiContactoPage;
 import com.selenium.pages.WikiDataPage;
 import com.selenium.pages.WikiHomePage;
 import com.selenium.pages.WikiLibrosPage;
@@ -78,9 +77,7 @@ public class TestCaseWiki {
 
 		wikiResultPage.GuardarCambios();
 
-		Assert.assertFalse(wikiResultPage.VerificarContenidoEditado("Cachivache"));
-
-		Reporter.log("- Fin de la Prueba -");
+		Assert.assertFalse(wikiResultPage.VerificarContenidoEditado("Cachivache"), "Los cambios no fueron revertidos");
 	}
 
 	// Bruno
@@ -94,8 +91,8 @@ public class TestCaseWiki {
 		wikiHomePage.AbrirPagina();
 
 		wikiResultPage.BuscarArticulo("Maven");
+		
 		Assert.assertTrue((wikiResultPage.VerificarUrl("Maven")), "No se redirigió al artículo de Maven");
-
 	}
 
 	// Charly
@@ -122,9 +119,8 @@ public class TestCaseWiki {
 		wikiResultPage.AgregarPagina("2");
 
 		wikiResultPage.BuscarArticulo("Estados Unidos");
-
-		Assert.assertTrue((wikiResultPage.VerificarUrl("Estados_Unidos")),
-				"No se redirigió al artículo de Estados Unidos");
+		
+		Assert.assertTrue((wikiResultPage.VerificarUrl("Estados_Unidos")), "No se redirigió al artículo de Estados Unidos");
 
 		wikiResultPage.AgregarPagina("3");
 
@@ -172,6 +168,8 @@ public class TestCaseWiki {
 				"No se redirigió a Registro - Páginas Especiales");
 
 		wikiResultPage.RealizarBusquedaRegistros();
+		
+		Assert.assertTrue((wikiResultPage.VerificarUrl("&user=asd&page=Cabrera")), "No se realizo la busqueda de los registros.");
 	}
 
 	// Juanma
@@ -222,6 +220,8 @@ public class TestCaseWiki {
 
 		Reporter.log("volver a la pagina http://wikipedia.org ");
 		driver.navigate().back();
+		
+		Assert.assertTrue((driver.getCurrentUrl().contains("https://www.wikipedia.org/")), "No se redirigio al home");
 
 	}
 
@@ -255,6 +255,8 @@ public class TestCaseWiki {
 		wikiHomePage.AbrirPagina("it");
 		Assert.assertTrue((wikiMainPage.VerificarUrl("https://it")), "No se redirigió a Wikipedia en Italiano");
 		driver.navigate().back();
+		
+		Assert.assertTrue((driver.getCurrentUrl().contains("https://www.wikipedia.org/")), "No se redirigio al home");
 	}
 
 	// Lucho
@@ -278,7 +280,8 @@ public class TestCaseWiki {
 		// a;adir x filtro desde el panel de seleccion
 		// Abrimos menu
 		cambiosRecientesPage.AgregarFiltros();
-
+		
+		Assert.assertTrue(driver.getCurrentUrl().contains("likelygood"), "No se aplicaron los filtros");
 	}
 
 	// Leo
@@ -287,29 +290,41 @@ public class TestCaseWiki {
 
 		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
 		WikiMainPage wikiMainPage = PageFactory.initElements(driver, WikiMainPage.class);
-		WikiResultPage wikiresult = PageFactory.initElements(driver, WikiResultPage.class);
+		WikiResultPage wikiResultPage= PageFactory.initElements(driver, WikiResultPage.class);
 
 		wikiHomePage.AbrirPagina();
 		wikiMainPage.VerificarUrl("Wikipedia:Portada");
 		wikiMainPage.UbicarOpcionDonaciones();
 
-		wikiresult.solicitarInfoDonacion();
+		wikiResultPage.solicitarInfoDonacion();
+		
+		Assert.assertTrue(wikiResultPage.VerificarUrl("donate.wikimedia.org/wiki/Ways_to_Give/es"), "No se redirigio a Otras maneras de donar");
 	}
 
 	// Julio
 	@Test(description = "Validar y verificar los titulos Wikipedia Contacto y solicitudes")
 	public void ValidarContacto() throws Exception {
 		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
-		WikiContactoPage wikiContactoPage = PageFactory.initElements(driver, WikiContactoPage.class);
+		WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
 
 		wikiHomePage.AbrirPagina();
 		wikiHomePage.BotonContacto();
-		wikiContactoPage.ValidarTitulo("Wikipedia:Contacto", "firstHeading");
-		wikiContactoPage.ValidarTitulo("Información importante", "Información_importante");
-		wikiContactoPage.ValidarTitulo("Dudas más frecuentes", "Dudas_más_frecuentes");
-		wikiContactoPage.Solicitud();
-		wikiContactoPage.ValidarTitulo("Wikipedia:Artículos solicitados", "firstHeading");
-
+		Assert.assertTrue(wikiResultPage.ValidarTitulo("Wikipedia:Contacto", "firstHeading"), "No se redirigio a Contacto");
+		Assert.assertTrue(wikiResultPage.ValidarTitulo("Información importante", "Información_importante"), "No se visualiza Información importante");
+		Assert.assertTrue(wikiResultPage.ValidarTitulo("Dudas más frecuentes", "Dudas_más_frecuentes"), "No se visualiza Dudas más frecuentas");
+		wikiResultPage.ValidarSolicitud();
+		
+		Assert.assertTrue(wikiResultPage.ValidarTitulo("Wikipedia:Artículos solicitados", "firstHeading"), "No se visualiza Artículos seleccionados");
 	}
-
+	
+	@Test(description = "Validar y veirificar que la busqueda sea correcta")
+	public void ValidarBusqueda() throws Exception{
+		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
+		WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
+		
+		wikiHomePage.RealizarBusqueda("Selenium");
+		
+		Assert.assertTrue(wikiResultPage.ValidarTitulo("Selenium", "firstHeading"), "No se encontro el titulo");
+		
+	}
 }

@@ -38,7 +38,6 @@ public class DriverFactory {
 			Reporter.log("Abro browser");
 			driver = new ChromeDriver();
 			break;
-
 		}
 		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
@@ -47,7 +46,7 @@ public class DriverFactory {
 		return driver;
 
 	}
-	
+
 	public static void FinalizarBrowser(WebDriver driver) {
 		Reporter.log("Cerrando el browser");
 		driver.quit();

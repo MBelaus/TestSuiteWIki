@@ -6,9 +6,9 @@
 	<test thread-count="5" name="Test">
 		<classes>
 			<class name="com.selenium.test.TestCaseWiki">
-<!-- 			<methods> -->
-<!-- 			<include name="ValidarRegistroCuenta" /> -->
-<!-- 			</methods> -->
+			<methods>
+			<include name="ValidarBusqueda" />
+			</methods>
 			</class>
 		</classes>
 	</test> <!-- Test -->
