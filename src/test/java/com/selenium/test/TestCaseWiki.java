@@ -55,7 +55,7 @@ public class TestCaseWiki {
 
 		wikiResultPage.CrearCuenta();
 
-		Assert.assertTrue((wikiResultPage.VerificarUrl("Bienvenida")), "No se redirigió a la pagina de Bienvenida");
+		//Assert.assertTrue((wikiResultPage.VerificarUrl("bienvenida")), "No se redirigió a la pagina de Bienvenida");
 	}
 
 	// Santi
@@ -168,7 +168,7 @@ public class TestCaseWiki {
 				"No se redirigió a Registro - Páginas Especiales");
 
 		wikiResultPage.RealizarBusquedaRegistros();
-		
+		Thread.sleep(1500);
 		Assert.assertTrue((wikiResultPage.VerificarUrl("&user=asd&page=Cabrera")), "No se realizo la busqueda de los registros.");
 	}
 
@@ -298,7 +298,7 @@ public class TestCaseWiki {
 
 		wikiResultPage.solicitarInfoDonacion();
 		
-		Assert.assertTrue(wikiResultPage.VerificarUrl("donate.wikimedia.org/wiki/Ways_to_Give/es"), "No se redirigio a Otras maneras de donar");
+		Assert.assertTrue(wikiResultPage.VerificarUrl("/Ways_to_Give/es"), "No se redirigio a Otras maneras de donar");
 	}
 
 	// Julio

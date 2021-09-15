@@ -50,7 +50,7 @@ public class WikiResultPage {
 	private WebElement cambiomenor;
 	@FindBy(xpath = "//span[@class='oo-ui-widget oo-ui-widget-enabled oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-flaggedElement-primary oo-ui-flaggedElement-progressive oo-ui-buttonWidget oo-ui-actionWidget oo-ui-labelElement']/a[@class='oo-ui-buttonElement-button']")
 	private WebElement publicar2;
-	@FindBy(xpath = "//div[@class='mw-parser-output']/p[3]")
+	@FindBy(xpath = "//div[@class='mw-parser-output']/p[1]")
 	private WebElement parrafoVerificar;
 	@FindBy(xpath = "//a[contains(text(),'Crear un libro')]")
 	private WebElement crear_libro;
@@ -200,8 +200,7 @@ public class WikiResultPage {
 	public boolean VerificarUrl(String valor) throws Exception {
 		Reporter.log("Verificamos que se redirigió a la página de " + valor);
 		String strUrl = driver.getCurrentUrl();
-		String url = String.format("wiki/%s", valor);
-		return strUrl.contains(url);
+		return strUrl.contains(valor);
 	}
 
 	public void CrearLibro() throws Exception {
