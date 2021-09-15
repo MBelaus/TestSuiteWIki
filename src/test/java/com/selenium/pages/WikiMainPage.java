@@ -21,7 +21,7 @@ public class WikiMainPage {
 	@FindBy(id = "p-tb")
 	private WebElement leftPanel;
 	
-	public void PaginasEspeciales(String valor) {
+	public void SeleccionarOpcionMenuLateral(String valor) {
 		String xpathLocator = String.format("//li/a[contains(text(),'%s", valor); 
 		xpathLocator+= "')]";
 		Reporter.log("Verificar que el panel izquierdo de opciones sea visible");

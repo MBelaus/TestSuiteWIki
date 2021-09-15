@@ -30,6 +30,7 @@ public class WikiHomePage {
 	
 
 	public void AbrirPagina() throws Exception {
+		Thread.sleep(1500);
 		Reporter.log("Ubica y selecciona el idioma Español");
 		Assert.assertTrue(idioma.isDisplayed(), "El idioma no aparece.");
 		idioma.click();

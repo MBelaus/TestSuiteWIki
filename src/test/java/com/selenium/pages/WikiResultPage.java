@@ -98,6 +98,8 @@ public class WikiResultPage {
 	private WebElement pResultado;
 	@FindBy(xpath = "//a[contains(text(), 'solicitudes')]")
 	private WebElement soli;
+	@FindBy(id = "firstHeading")
+	private WebElement title;
 
 	public void IniciarSesion() throws Exception {
 		String sUsuario = "SeleniumWikiBot";
@@ -124,21 +126,24 @@ public class WikiResultPage {
 		busqueda.click();
 		busqueda.sendKeys(sBuscado + Keys.ENTER);
 		Thread.sleep(500);
-
+		
 		if (driver.getCurrentUrl().contains("https://es.wikipedia.org/w/index.php?search=")) {
+			Thread.sleep(1500);
 			Reporter.log("No hubo redireccion. Se selecciona el articulo en la lista");
 			WebElement articulo = driver.findElement(By.linkText(sBuscado));
 			articulo.click();
 		}
 
 		String sBuscadoNoSpace = sBuscado.replace(" ", "_");
+		Thread.sleep(1500);
 		Assert.assertTrue(driver.getCurrentUrl().contains(sBuscadoNoSpace), "el articulo no fue encontrado");
 	}
 
 	public void RealizarEdicion(String palabra) throws Exception {
-		Thread.sleep(1500);
+		Thread.sleep(3000);
 		Reporter.log("Se intenta presionar el boton \"Editar\"");
-
+		
+		Thread.sleep(3000);
 		Assert.assertTrue(editar.isDisplayed(), "La opcion de edicion visual no esta disponible");
 
 		editar.click();
@@ -200,7 +205,8 @@ public class WikiResultPage {
 	public boolean VerificarUrl(String valor) throws Exception {
 		Reporter.log("Verificamos que se redirigió a la página de " + valor);
 		String strUrl = driver.getCurrentUrl();
-		return strUrl.contains(valor);
+		String formatUrl = strUrl.replace("_", " ");
+		return formatUrl.contains(valor);
 	}
 
 	public void CrearLibro() throws Exception {
@@ -399,5 +405,10 @@ public class WikiResultPage {
 		Assert.assertTrue(soli.isDisplayed(), "El boton de solicitudos no se muestra");
 		Reporter.log("Hacer Click en Solicitudes");
 		soli.click();
+	}
+	
+	public boolean ValidarTitulo(String valor) throws Exception {
+		Reporter.log("Validar que el titulo sea el correcto");
+		return title.getText().contains(valor);
 	}
 }

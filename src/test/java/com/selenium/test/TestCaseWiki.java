@@ -11,6 +11,7 @@ import org.testng.Reporter;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.selenium.driver.DriverFactory;
@@ -31,6 +32,23 @@ import com.selenium.pages.WikiWictionaryPage;
 public class TestCaseWiki {
 	WebDriver driver;
 	WebDriverWait wait;
+	
+	@DataProvider(name = "datos")
+	public Object[][] createData() {
+	return new Object[][] {
+	{ "Selenium","Selenium"},
+	{ "TDD", "Desarrollo guiado por pruebas"}
+	};
+	}
+	
+	@DataProvider(name = "opcionMenu")
+	public Object[][] createDataMenu() {
+	return new Object[][] {
+	{ "Páginas especiales","Especial:P%C3%A1ginasEspeciales"}
+	};
+	}
+	
+
 
 	@BeforeMethod
 	public void IniciarBrowser(ITestContext context) {
@@ -43,19 +61,21 @@ public class TestCaseWiki {
 		DriverFactory.FinalizarBrowser(driver);
 	}
 
-	@Test(description = "Validar y verificar la seccion Crear una cuenta en las paginas especiales de Wikipedia")
-	public void ValidarRegistroCuenta() throws Exception {
+	@Test(dataProvider = "opcionMenu", description = "Validar y verificar la seccion Crear una cuenta en las paginas especiales de Wikipedia")
+	public void ValidarRegistroCuenta(String valor, String resultado) throws Exception {
 		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
 		WikiMainPage wikiMainPage = PageFactory.initElements(driver, WikiMainPage.class);
 		WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
 
 		wikiHomePage.AbrirPagina();
 
-		wikiMainPage.PaginasEspeciales("Páginas especiales");
+		wikiMainPage.SeleccionarOpcionMenuLateral(valor);
 
+		Assert.assertTrue((wikiResultPage.VerificarUrl(resultado)),"No se redirigió a Páginas Especiales");
+		
 		wikiResultPage.CrearCuenta();
 
-		//Assert.assertTrue((wikiResultPage.VerificarUrl("bienvenida")), "No se redirigió a la pagina de Bienvenida");
+		Assert.assertTrue((wikiResultPage.ValidarTitulo("Bienvenida")), "No se redirigió a la pagina de Bienvenida");
 	}
 
 	// Santi
@@ -67,16 +87,22 @@ public class TestCaseWiki {
 		WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
 		wikiResultPage.IniciarSesion();
 
+		Thread.sleep(3000);
 		wikiResultPage.BuscarArticulo("Linux");
 
+		Thread.sleep(3000);
 		wikiResultPage.RealizarEdicion("Cachivache");
 
+		Thread.sleep(3000);
 		wikiResultPage.GuardarCambios();
 
+		Thread.sleep(3000);
 		wikiResultPage.RealizarBorrarEdicion("Cachivache");
 
+		Thread.sleep(3000);
 		wikiResultPage.GuardarCambios();
 
+		Thread.sleep(3000);
 		Assert.assertFalse(wikiResultPage.VerificarContenidoEditado("Cachivache"), "Los cambios no fueron revertidos");
 	}
 
@@ -98,16 +124,17 @@ public class TestCaseWiki {
 	// Charly
 	@Test(description = "Validar y verificar que Wikipedia permite crear un Libro y el mismo pueda ser descargado desde PediaPress")
 	public void VyVCreacionLibroWiki() throws Exception {
+		Thread.sleep(1500);
 		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
 		wikiHomePage.RealizarBusqueda("Argentina");
-
+		
 		WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
 		Assert.assertTrue((wikiResultPage.VerificarUrl("Argentina")), "No se redirigió al artículo de Argentina");
 
 		wikiResultPage.CrearLibro();
 
 		wikiResultPage.AgregarPagina("1");
-
+		
 		wikiResultPage.BuscarArticulo("Chile");
 
 		// Tengo que esperar un momento para que pueda redirigir directamente al
@@ -120,7 +147,7 @@ public class TestCaseWiki {
 
 		wikiResultPage.BuscarArticulo("Estados Unidos");
 		
-		Assert.assertTrue((wikiResultPage.VerificarUrl("Estados_Unidos")), "No se redirigió al artículo de Estados Unidos");
+		Assert.assertTrue((wikiResultPage.VerificarUrl("Estados Unidos")), "No se redirigió al artículo de Estados Unidos");
 
 		wikiResultPage.AgregarPagina("3");
 
@@ -133,10 +160,12 @@ public class TestCaseWiki {
 
 		PediaPressGeneratedPage pediaPressGeneratedPage = PageFactory.initElements(driver,
 				PediaPressGeneratedPage.class);
+		Thread.sleep(1500);
 		Assert.assertTrue((pediaPressGeneratedPage.VerificarUrl("pediapress.com")),
 				"No se redirigió a la página de Pediapress");
 		// Actualmente los tres artículos suman un total de 379 páginas en el libro que
 		// se genera
+		Thread.sleep(1500);
 		pediaPressGeneratedPage.AddCart();
 
 		// Considero el final de la prueba cuando se llega al carrito
@@ -157,7 +186,7 @@ public class TestCaseWiki {
 		Assert.assertTrue((wikiMainPage.VerificarUrl("Wikipedia:Portada")),
 				"No se redirigió a la portada de Wikipedia en Español");
 
-		wikiMainPage.PaginasEspeciales("Páginas especiales");
+		wikiMainPage.SeleccionarOpcionMenuLateral("Páginas especiales");
 
 		Assert.assertTrue((wikiResultPage.VerificarUrl("Especial:P%C3%A1ginasEspeciales")),
 				"No se redirigió a Páginas Especiales");
@@ -230,6 +259,7 @@ public class TestCaseWiki {
 	public void ValidarIdioma() throws Exception {
 		WikiHomePage wikiHomePage = PageFactory.initElements(driver, WikiHomePage.class);
 		WikiMainPage wikiMainPage = PageFactory.initElements(driver, WikiMainPage.class);
+		
 
 		// Español
 		wikiHomePage.AbrirPagina("es");
@@ -269,7 +299,7 @@ public class TestCaseWiki {
 		wikiHomePage.AbrirPagina();
 
 		// buscar la seccion cambios recientes
-		wikiMainPage.PaginasEspeciales("Cambios recientes");
+		wikiMainPage.SeleccionarOpcionMenuLateral("Cambios recientes");
 
 		// hacer click en borra x filtro
 		cambiosRecientesPage.BorrarFiltro("Quitar «Ser humano (no bot)»");
@@ -298,7 +328,7 @@ public class TestCaseWiki {
 
 		wikiResultPage.solicitarInfoDonacion();
 		
-		Assert.assertTrue(wikiResultPage.VerificarUrl("/Ways_to_Give/es"), "No se redirigio a Otras maneras de donar");
+		Assert.assertTrue(wikiResultPage.VerificarUrl("Ways to Give/es"), "No se redirigio a Otras maneras de donar");
 	}
 
 	// Julio
@@ -327,4 +357,15 @@ public class TestCaseWiki {
 		Assert.assertTrue(wikiResultPage.ValidarTitulo("Selenium", "firstHeading"), "No se encontro el titulo");
 		
 	}
+	
+	@Test( dataProvider = "datos",description = "Validar y verificar que Wikipedia Home Page contiene el campo de busqueda")
+			public void validarCajaTexto(String varBuscar, String resultado) throws Exception {
+			WikiHomePage wikiHomepage = PageFactory.initElements(driver, WikiHomePage.class);
+			wikiHomepage.RealizarBusqueda(varBuscar);
+			Reporter.log("Validar que el titulo sea \"Selenium - Wikipedia, la enciclopedia libre\" ");
+			WikiResultPage wikiResultPage = PageFactory.initElements(driver, WikiResultPage.class);
+			Assert.assertTrue((wikiResultPage.VerificarUrl(resultado)), "No contiene " + resultado + " - Wikipedia, la enciclopedia libre");
+			Reporter.log("Validar que el titulo sea " + varBuscar);
+			Assert.assertTrue((wikiResultPage.ValidarTitulo(resultado)), "el valor " + resultado + " no se encontro en el titulo");
+			}
 }
